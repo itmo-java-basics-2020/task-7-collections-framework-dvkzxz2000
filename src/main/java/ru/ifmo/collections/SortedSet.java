@@ -1,7 +1,6 @@
 package ru.ifmo.collections;
 
-import java.util.AbstractSet;
-import java.util.Comparator;
+import java.util.*;
 
 /**
  * Represents sorted set of unique values.
@@ -16,21 +15,79 @@ import java.util.Comparator;
  *
  * @param <T> set contents type
  */
-public abstract class SortedSet<T> extends AbstractSet<T> {
-    // private final Map<???, ???> contents; TODO decide Map implementation and key/value types. "???" is used just as an example
+public class SortedSet<T> extends AbstractSet<T> {
+
+    private TreeMap<T, Object> treeMap;
+
+    public SortedSet(Comparator<T> comparator) {
+        this.treeMap = new TreeMap<>(comparator);
+    }
+
     public static <T> SortedSet<T> create() {
-        throw new UnsupportedOperationException(); // TODO implement
+        return new SortedSet<T>(null);
     }
 
     public static <T> SortedSet<T> from(Comparator<T> comparator) {
-        throw new UnsupportedOperationException(); // TODO implement
+        return new SortedSet<T>(comparator);
     }
 
-    public T[] getSorted() {
-        throw new UnsupportedOperationException(); // TODO implement
+    public Collection<T> getSorted() {
+        return new ArrayList<>(treeMap.keySet());
     }
 
-    public T[] getReversed() {
-        throw new UnsupportedOperationException(); // TODO implement
+    public Collection<T> getReversed() {
+        return new ArrayList<>(treeMap.descendingKeySet());
+    }
+
+    @Override
+    public Iterator<T> iterator() {
+        return treeMap.keySet().iterator();
+    }
+
+    @Override
+    public int size() {
+        return treeMap.size();
+    }
+
+    @Override
+    public boolean add(T t) {
+        if(treeMap.put(t, new Object()) == null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean addAll(Collection<? extends T> collection) {
+        boolean torf = false;
+        for (T i : collection) {
+            if (add(i)) {
+                torf = true;
+            }
+        }
+        return torf;
+    }
+
+    @Override
+    public boolean remove(Object object) {
+        if(treeMap.remove(object) == null) {
+            return true;
+        }
+        else {
+            return false;
+        }
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> collection) {
+        boolean torf = false;
+        for (Object i : collection) {
+            if (remove(i)) {
+                torf = true;
+            }
+        }
+        return torf;
     }
 }
